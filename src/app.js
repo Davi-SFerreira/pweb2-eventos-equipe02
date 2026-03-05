@@ -33,4 +33,32 @@ app.post("/eventos", (req, res) => {
     res.status(201).json(novoEvento)
 })
 
+app.put()
+
+app.delete("/eventos/:id", (req, res) => {
+    const { id } = req.params
+    const evento = db.buscarPorId(Number(id))
+    if(!evento){
+        res.status(404).json({mensagem: "Evento não encontrado"})
+        return
+    }
+    db.remover(Number(id))
+    res.status(204).send()
+})
+
+app.get("/eventos", (req, res) => {
+    const { ativo } = req.query
+    if(ativo === "true"){
+        const eventosAtivos = db.listarAtivos()
+        res.status(200).json(eventosAtivos)
+    }
+})
+
+app.get("/eventos", (req, res) => {
+    const { modalidade } = req.query
+    if(modalidade === "presencial"){
+        const eventosPresenciais = db.listarPorModalidade("presencial")
+        res.status(200).json(eventosPresenciais)
+}
+
 export default app
