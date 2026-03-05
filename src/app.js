@@ -21,6 +21,20 @@ app.get("/eventos/:id", (req, res) => {
     res.status(200).json({evento})
 })
 
+app.post("/eventos", (req, res) => {
+    const { titulo, descricao, vagas, vagasDisponiveis,
+        modalidade, cargaHoraria, ativo, dataCriacao } = req.body
+    
+    if(!titulo || !descricao || !vagas || !vagasDisponiveis
+        || !modalidade || !cargaHoraria || !ativo || !dataCriacao){
+        res.status(422).json({mensagem: "Campos obrigatórios ausentes"})
+    }
+    const novoEvento = db.inserir(req.body)
+    res.status(201).json(novoEvento)
+})
+
+app.put()
+
 app.delete("/eventos/:id", (req, res) => {
     const { id } = req.params
     const evento = db.buscarPorId(Number(id))
@@ -45,7 +59,6 @@ app.get("/eventos", (req, res) => {
     if(modalidade === "presencial"){
         const eventosPresenciais = db.listarPorModalidade("presencial")
         res.status(200).json(eventosPresenciais)
-    }
-})
+}
 
 export default app
