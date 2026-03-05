@@ -21,4 +21,17 @@ app.get("/eventos/:id", (req, res) => {
     res.status(200).json({evento})
 })
 
+app.delete("/eventos/:id", (req, res) => {
+    const { id } = req.params
+    const evento = db.buscarPorId(Number(id))
+
+    if(!evento){
+        res.status(404).json({mensagem: "Evento não encontrado"})
+        return
+    }
+
+    db.remover(Number(id))
+    res.status(204).send()
+})
+
 export default app
