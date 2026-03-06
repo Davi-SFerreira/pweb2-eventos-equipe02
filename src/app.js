@@ -78,5 +78,24 @@ app.get("/eventos", (req, res) => {
     }
 })
 
+app.get("/eventos", (req, res) => {
+
+})
+
+app.post("/eventos/:id/inscricao", (req, res) => {
+    const { id } = req.params
+    const reduzVaga =  db.reduzirVaga(Number(id))
+
+    if (!reduzVaga){
+        res.status(500).json({mensagem: "Evento não possui vagas disponíveis"})
+        return
+    }
+
+    res.status(200).json({mensagem: "Inscrição realizada com sucesso"})
+})
+
+app.patch("/eventos/:id/cancelar", (req, res) => {
+
+})
 
 export default app
