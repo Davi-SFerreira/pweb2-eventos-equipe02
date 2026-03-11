@@ -79,7 +79,22 @@ app.get("/eventos", (req, res) => {
 })
 
 app.get("/eventos", (req, res) => {
+    const { ativo, modalidade, vagasMin } = req.query
+    let eventos = db.listarTodos()
 
+    if (ativo === "true") {
+        eventos = db.listarAtivos()
+    }
+
+    if (modalidade) {
+        eventos = eventos.filter(e => e.modalidade === modalidade)
+    }
+
+    if (vagasMin) {
+        eventos = eventos.filter(e => e.vagasDisponiveis >= Number(vagasMin))
+    }
+
+    res.status(200).json(eventos)
 })
 
 app.post("/eventos/:id/inscricao", (req, res) => {
@@ -95,7 +110,14 @@ app.post("/eventos/:id/inscricao", (req, res) => {
 })
 
 app.patch("/eventos/:id/cancelar", (req, res) => {
-
+    const { id } = req.params
+    const evento = db.buscarPorId(Number(id))
+    if (!evento) {
+        return res.status(404).json({ mensagem: "Evento não encontrado" })
+    }
+    
+    evento.ativo = false
+    res.status(200).json(evento)
 })
 
 export default app
